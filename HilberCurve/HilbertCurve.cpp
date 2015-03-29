@@ -142,9 +142,6 @@ LRESULT CALLBACK WindowProcedure(HWND hwnd, UINT message, WPARAM wParam, LPARAM 
 		ValidateRect(hwnd, NULL);
 		EndPaint(hwnd, &ps);
 		break;
-
-
-
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
