@@ -1,4 +1,4 @@
-#ifndef _MATRIX2_HPP
+﻿#ifndef _MATRIX2_HPP
 #define _MATRIX2_HPP
 
 #include <vector>

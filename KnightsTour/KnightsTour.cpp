@@ -1,25 +1,26 @@
-#include <iostream>
+﻿#include <iostream>
 #include <exception>
 #include <vector>
 #include "Matrix2.hpp"
 
-
-
 int n = 5;
 int nsq = 25;
-int xx0 = 0;
-int yy0 = 0;
 point beginPoint;
 Matrix2 m;
-
 
 #define IN_BOUNDS(p) p.first>=0 && p.first<n &&\
 	p.second >= 0 && p.second<n
 
+void parseArgs(int argc, char** argv){
+	n = atoi(argv[1]);
+	beginPoint = point(atoi(argv[2]), atoi(argv[3]));
+}
 
-
-void usageAndExit();
-void parseArgs(int argc, char** argv);
+void usageAndExit(){
+	std::cout << "KnightsTour.exe <field_size> <x0> <y0>\n\t \
+				 		field_size-size of field\n\t(x0,y0) - start position" << std::endl;
+	exit(-1);
+}
 
 std::vector<point> knightMoves{
 	{ 2, 1 }, { 1, 2 }, { -1, 2 },  { -2, 1 }, 
@@ -61,7 +62,6 @@ int main(int argc, char** argv){
 		else {
 			printf("No solution...\n");
 		}
-		
 	}
 	catch (const std::exception &e) {
 		std::cout << e.what() <<std::endl;
@@ -72,16 +72,4 @@ int main(int argc, char** argv){
 	printf("Press any key to exit...\n");
 	getc(stdin);
 	return 0;
-}
-
-void parseArgs(int argc, char** argv){
-	n = atoi(argv[1]);
-	beginPoint = point(atoi(argv[2]), atoi(argv[3]));
-}
-
-
-void usageAndExit(){
-	std::cout << "KnightsTour.exe <field_size> <x0> <y0>\n\t \
-		field_size-size of field\n\t(x0,y0) - start position" << std::endl;
-	exit(-1);
 }
