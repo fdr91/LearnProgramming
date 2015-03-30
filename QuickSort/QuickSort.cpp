@@ -17,7 +17,6 @@ void printArr(T first, T last){
 		std::cout << *(first++) << "\t";
 	std::cout << "\n";
 }
-
 template< typename BidirectionalIterator, typename Compare >
 void quick_sort(BidirectionalIterator first, BidirectionalIterator last, Compare cmp) {
 	if (first != last) {
@@ -32,7 +31,6 @@ void quick_sort(BidirectionalIterator first, BidirectionalIterator last, Compare
 				while ((left != --right) && cmp(*pivot, *right))
 					;
 				std::iter_swap(left, right);
-				printArr(first, last);
 			}
 		}
 		--left;
@@ -42,7 +40,7 @@ void quick_sort(BidirectionalIterator first, BidirectionalIterator last, Compare
 	}
 }
 
-std::vector<int> vec{1, 14, 5, 3, 45, 3, 12};
+std::vector<int> vec{2 , 14, 5, 3, 45, 3, 12};
 
 int main(int argc, char** argv){
 	printArr(vec);
