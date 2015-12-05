@@ -1,47 +1,61 @@
 #include <vector>
+#include <iostream>
+#include <functional>   // std::greater
 
-template<typename I, typename C>
-void checkRootNode(I vec, size_t root, size_t size, C comp){
-	size_t left = root * 2;
-	size_t right = root * 2+1;
-	if (left < size && comp(*root, *(vec+left))){
-		std::iter_swap(root, vec+left);
-		checkRootNode(vec, left, size, comp);
-	}
-	if (right < size && comp(*root, *(vec+right))){
-		std::iter_swap(root, vec + right);
-		checkRootNode(vec, right, size, comp);
-	}
+template<typename T>
+void printArr(T a){
+	for (auto e : a)
+		std::cout << e << "\t";
+	std::cout << "\n";
 }
+std::vector<int> glob;
+#define N 7
 
-
-template<typename I, typename C>
-void build_heap(I vec, size_t size, C comp){
-	for (size_t i = size / 2; i > 0; --i)
-		checkRootNode(vec, i, size, comp);
-}
-
-template<typename I, typename C>
-void heap_sort(I vec, size_t size){
-
+template<typename T, typename C>
+void heapify(T a, size_t i, size_t size, C c){
+	size_t left = 2 * i + 1;
+	size_t right = left + 1;
+	size_t el = i;
+	if (left < size && c(*(a + i), *(a + left)))
+		el = left;
+	if (right < size && c(*(a + el), *(a + right)))
+		el = right;
+	if (el!=i){
+		std::iter_swap((a + el), (a + i));
+		heapify(a, el, size, c);
+	}
 }
 
 template<typename T, typename C>
-void heap_sort(T t, C comp){
-
+void buildHeap(T a, size_t size, C c){
+	size_t i = size / 2;
+	do{
+		heapify(a, i, size, c);
+	} while (i-- != 0);
 }
 
-std::vector<int> vec;
 
-#define N 7
+
+template<typename T, typename C>
+void heap_sort(T a, size_t size, C c){
+	buildHeap(a, size, c);
+	size_t length=size;
+	while (--length){
+		std::iter_swap(a, a + length);
+		heapify(a, 0, length,c);
+	}
+}
+
 
 int main(int argc, char** argv){
 
 	while (true){
-		vec.clear();
+		glob.clear();
 		for (int i = 0; i < N; i++)
-			vec.push_back(rand() % 100);
-		heap_sort(vec);
+			glob.push_back(rand() % 100);
+		printArr(glob);
+		heap_sort(glob.begin(), N, std::greater<int>());
+		printArr(glob);
 		getc(stdin);
 	}
 
