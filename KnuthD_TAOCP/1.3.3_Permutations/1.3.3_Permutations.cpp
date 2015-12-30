@@ -1,7 +1,6 @@
 // 1.3.3_Permutations.cpp : Defines the entry point for the console application.
 //
 
-#include "stdafx.h"
 #include <cassert>
 #include <iostream>
 #include <string>
@@ -10,8 +9,9 @@
 #include <sstream>
 #include <algorithm>
 #include <map>
+#include <climits>
 
-typedef  unsigned char uchar;
+//typedef  unsigned char uchar;
 
 using namespace std;
 
@@ -21,8 +21,8 @@ void printVector(const vector<pair<char, bool>> & tokens) {
 }
 
 
-template<class I>
-void printWithSpaces(const string & head, I & begin, I & end) {
+template<typename I>
+void printWithSpaces(const string head, I begin, I end) {
 	cout << head << endl;
 	for (; begin != end; ++begin) {
 		cout << *begin << " ";
@@ -34,7 +34,6 @@ void printWithSpaces(const string & head, I & begin, I & end) {
 void initialProcessing(const string src, vector<pair<char, bool>> & tokens) {
 	tokens.clear();
 	char c = 0;
-	bool changeS = true;
 	for (string::const_iterator i = src.begin(); i != src.end(); ++i) {
 		switch (*i) {
 		case '(':
@@ -61,12 +60,9 @@ void initialProcessing(const string src, vector<pair<char, bool>> & tokens) {
 	cout << endl;
 }
 
-void initialProcessing(const string src, vector<uchar> & tokens) {
+void initialProcessing(const string src, vector<unsigned char> & tokens) {
 	tokens.clear();
-	char c = 0;
-	bool changeS = true;
 	for (string::const_iterator i = src.begin(); i != src.end(); ++i) {
-		int l = tokens.size();
 		if (*i == ' ')
 			continue;
 		tokens.push_back(*i);	
@@ -75,7 +71,7 @@ void initialProcessing(const string src, vector<uchar> & tokens) {
 }
 
 
-void seekNextUnmarked(vector<pair<char, bool>>::const_iterator & pos, vector<pair<char, bool>>::const_iterator & end) {
+void seekNextUnmarked(vector<pair<char, bool>>::iterator & pos, const vector<pair<char, bool>>::iterator & end) {
 
 	while (pos != end) {
 		if (!(*pos).second){
@@ -86,7 +82,8 @@ void seekNextUnmarked(vector<pair<char, bool>>::const_iterator & pos, vector<pai
 	return;
 }
 
-void seekNextNotBracket(vector<pair<char, bool>>::const_iterator & pos, vector<pair<char, bool>>::const_iterator & end) {
+template <class I>
+void seekNextNotBracket(I & pos,const I end) {
 	while (pos != end && (*pos++).first == '(');
 	return;
 }
@@ -116,13 +113,10 @@ void solvePerm(string src, vector<char>& result) {
 	seekNextUnmarked(pos, tokens.end());
 
 	while (pos != tokens.end()) {
-
-		(*pos).second = true;
 		result.push_back('(');
 		result.push_back((*pos).first);
 		(*pos).second = true;
 		start = (*pos).first;
-
 		seekNextNotBracket(pos, tokens.end());
 		cur = (*pos).first;
 		pos++;
@@ -177,7 +171,7 @@ void testSolvePerm() {
 		solvePerm(*i, result);
 
 		ostringstream oss;
-		for (int i = 0; i < result.size() - 1; i++) {
+		for (size_t i = 0; i < result.size() - 1; i++) {
 			oss << result[i] << " ";
 		}
 		oss << result[result.size() - 1];
@@ -248,16 +242,16 @@ void reversePermutationInPlaceZeroBased(vector<int> & perm) {
 
 void testReversePermutation() {
 	cout << "BEGIN testReversePermutation" << endl;
-	vector<vector<int>> perms;
-	vector<vector<int>> expected;
+	vector<vector<int> > perms;
+	vector<vector<int> > expected;
 	void (*reverseFunction)(vector<int>&); 
 #ifdef NOT_ZERO_BASED
-	perms.push_back(   { 6, 2, 1, 5, 4, 3 });
-	expected.push_back({ 3, 2, 6, 5, 4, 1 });
+	perms.push_back( vector<int> ({ 6, 2, 1, 5, 4, 3 }));
+	expected.push_back(vector<int> ({ 3, 2, 6, 5, 4, 1 }));
 	reverseFunction = reversePermutationInPlace;
 #else
-	perms.push_back(   { 5, 1, 0, 4, 3, 2 });
-	expected.push_back({ 2, 1, 5, 4, 3, 0 });
+	perms.push_back( vector<int> ({ 5, 1, 0, 4, 3, 2 }) );
+	expected.push_back(vector<int> ({ 2, 1, 5, 4, 3, 0 }));
 	reverseFunction = reversePermutationInPlaceZeroBased;
 #endif
 	assert(perms.size() == expected.size());
@@ -274,25 +268,16 @@ void testReversePermutation() {
 	cout << "END testReversePermutation" << endl;
 }
 
-/*
-//a 0 b 1 c 2 d 3 e 4 f 5
-int aCDistance(uchar c) {
-	const uchar a = 'a';
-	int ret = (int)c - (int)a;
-
-	return ret;
-}*/
-
-void multiplyPermutationSinglePass(string src, map<uchar, uchar>& result) {
-	vector<uchar> tokens;
+void multiplyPermutationSinglePass(string src, map<unsigned char, unsigned char>& result) {
+	vector<unsigned char> tokens;
 	initialProcessing(src, tokens);
 	result.clear();
 	//XXX
-	for (uchar i = 'a'; i <= 'g'; ++i) {
+	for (unsigned char i = 'a'; i <= 'g'; ++i) {
 		result[i] = i;
 	}
-	uchar j = -1;
-	uchar z = 0;
+	unsigned char j = -1;
+	unsigned char z = 0;
 
 	for (auto m = tokens.rbegin(); m != tokens.rend(); ++m) {
 		switch (*m){
@@ -329,13 +314,13 @@ void testMultiplyPermutationSinglePass() {
 	assert(perms.size() == goals.size());
 
 	for (auto i = perms.begin(), goal = goals.begin(); i != perms.end(); ++i, ++goal) {
-		map<uchar, uchar> result;
+		map<unsigned char, unsigned char> result;
 
 		cout << "Source permutation: " << *i << endl;
 		multiplyPermutationSinglePass(*i, result);
 
 		ostringstream oss;
-		for (uchar i = 'a'; i < 'g'; i++) {
+		for (unsigned char  i = 'a'; i < 'g'; i++) {
 			oss << result[i] << " ";
 		}
 		oss << result['g'];
@@ -350,7 +335,7 @@ void testMultiplyPermutationSinglePass() {
 	cout << "END testMultiplyPermutationSinglePass" << endl;
 }
 
-int main(int argc, _TCHAR* argv[])
+int main(int argc, char* argv[])
 {
 	if (argc == 1) {
 		//testSolvePerm();
