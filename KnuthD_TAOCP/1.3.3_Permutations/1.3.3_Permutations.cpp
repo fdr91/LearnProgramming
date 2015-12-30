@@ -67,17 +67,6 @@ void initialProcessing(const string src, vector<pair<char, bool>> & tokens) {
 	cout << endl;
 }
 
-void initialProcessing(const string src, vector<unsigned char> & tokens) {
-	tokens.clear();
-	for (string::const_iterator i = src.begin(); i != src.end(); ++i) {
-		if (*i == ' ')
-			continue;
-		tokens.push_back(*i);
-	}
-	printWithSpaces("Preparation res: ", tokens.begin(), tokens.end());
-}
-
-
 void seekNextUnmarked(vector<pair<char, bool>>::iterator & pos, const vector<pair<char, bool>>::iterator & end) {
 
 	while (pos != end) {
