@@ -11,15 +11,21 @@
 #include <map>
 #include <climits>
 
-//typedef  unsigned char uchar;
+void testMultiplyPermutationSinglePass();
+void testSolvePerm();
+void testReversePermutation();
 
-using namespace std;
-
-void printVector(const vector<pair<char, bool>> & tokens) {
-	for (auto i = tokens.begin(); i != tokens.end(); ++i)
-		cout << (*i).first << ((*i).second ? "* " : " ");
+int main(int argc, char* argv[])
+{
+	if (argc == 1) {
+		testSolvePerm();
+		testReversePermutation();
+		testMultiplyPermutationSinglePass();
+	}
+	return 0;
 }
 
+using namespace std;
 
 template<typename I>
 void printWithSpaces(const string head, I begin, I end) {
@@ -56,7 +62,8 @@ void initialProcessing(const string src, vector<pair<char, bool>> & tokens) {
 	}
 
 	cout << "Preparation res: ";
-	printVector(tokens);
+	for (auto i = tokens.begin(); i != tokens.end(); ++i)
+		cout << (*i).first << ((*i).second ? "* " : " ");
 	cout << endl;
 }
 
@@ -65,7 +72,7 @@ void initialProcessing(const string src, vector<unsigned char> & tokens) {
 	for (string::const_iterator i = src.begin(); i != src.end(); ++i) {
 		if (*i == ' ')
 			continue;
-		tokens.push_back(*i);	
+		tokens.push_back(*i);
 	}
 	printWithSpaces("Preparation res: ", tokens.begin(), tokens.end());
 }
@@ -337,15 +344,5 @@ void testMultiplyPermutationSinglePass() {
 
 	cout << "TEST PASSED" << endl;
 	cout << "END testMultiplyPermutationSinglePass" << endl;
-}
-
-int main(int argc, char* argv[])
-{
-	if (argc == 1) {
-		//testSolvePerm();
-		//testReversePermutation();
-		testMultiplyPermutationSinglePass();
-	}
-	return 0;
 }
 
