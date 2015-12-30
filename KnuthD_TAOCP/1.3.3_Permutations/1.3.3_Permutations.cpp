@@ -102,6 +102,14 @@ void logState(vector<char>::const_iterator& begin, vector<char>::const_iterator&
 	cout << endl;
 }
 
+string resToStr(const map<unsigned char, unsigned char>& result) {
+	ostringstream oss;
+	for(map<unsigned char, unsigned char>::const_iterator i = result.begin(); i != result.end(); i++) 	{
+		oss << (*i).first << "->" << (*i).second << " ";
+	}
+	return oss.str();
+}
+
 void solvePerm(string src, vector<char>& result) {
 
 	vector<pair<char, bool>> tokens;
@@ -269,8 +277,6 @@ void testReversePermutation() {
 }
 
 void multiplyPermutationSinglePass(string src, map<unsigned char, unsigned char>& result) {
-	vector<unsigned char> tokens;
-	initialProcessing(src, tokens);
 	result.clear();
 	//XXX
 	for (unsigned char i = 'a'; i <= 'g'; ++i) {
@@ -279,22 +285,20 @@ void multiplyPermutationSinglePass(string src, map<unsigned char, unsigned char>
 	unsigned char j = -1;
 	unsigned char z = 0;
 
-	for (auto m = tokens.rbegin(); m != tokens.rend(); ++m) {
+	for (auto m = src.rbegin(); m != src.rend(); ++m) {
 		switch (*m){
+		case ' ':
+			continue;
 		case ')'://STEP2.1
 			z = 0;
 			break;
 		case '('://STEP2.2
 			result[j] = z;
 			break;
-		default:
-			//STEP3
+		default://STEP3
 			swap(z, result[*m]);
 			if (result[*m] == 0) {
 				j = *m;
-			}
-			else {//STEP4
-				result[j] = z;
 			}
 			break;
 		}
